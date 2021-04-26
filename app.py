@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel, EmailStr
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from email_utils import send_mail
+from fastapi.templating import Jinja2Templates
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -30,16 +31,26 @@ class EmailForm(BaseModel):
     items: List[Item]
 
 
+templates = Jinja2Templates(directory="templates")
+
+
 @app.post('/form')
-async def form(form: EmailForm):
-    message = f"Заказ от : {form.name}\nГород / Регион : {form.city}\nАдрес доставки: {form.address}\nТелефон : {form.phone_number}\nEmail : {form.email}\nКоличество товаров {len(form.items)}:\n"
-    list_message = ""
+async def form(request: Request, form: EmailForm):
     total_price = 0
     for item in form.items:
-        list_message += f"\t{item.name}\n\t\tОбъем в мл - {item.volume}\n\t\tЦена за шт. - {item.price}\n\t\tКоличество - {item.count}\n\t\tАртикул - {item.vendor_code}\n"
-        total_price = item.price * item.count
-    price_message = f"Итоговая цена : {total_price}₽"
-    send_mail(message+list_message+price_message)
+        total_price += item.count * item.price
+    message = templates.TemplateResponse(
+        "email_template.html", {
+            "request": request,
+            "name": form.name,
+            "email": form.email,
+            "city": form.city,
+            "address": form.address,
+            "phone_number": form.phone_number,
+            "items": form.items,
+            "total_price": total_price
+        }).body.decode('utf-8')
+    send_mail(message)
 
 
 @app.get('/')

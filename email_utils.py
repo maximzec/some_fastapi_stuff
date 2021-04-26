@@ -16,7 +16,7 @@ def send_mail(message):
     msg["Subject"] = Header("Семейная привлекательность - новый заказ")
     msg["From"] = Header(email_login)
     msg["To"] = Header(email_login)
-    text = MIMEText(message, 'plain')
+    text = MIMEText(message, 'html')
     msg.attach(text)
     with smtplib.SMTP(smtp_server, port) as server:
         server.ehlo()  # Can be omitted

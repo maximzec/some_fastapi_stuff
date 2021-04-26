@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Форма заказа</title>
+<style type="text/css">
+body{
+font-family: sans-serif;
+}
+table{
+background: #fff;
+border-spacing: 0;
+border: 1px solid #000;
+}
+td{
+border: 1px solid #000;
+font-size: 16px;
+padding: 7px;
+}
+.table-first{
+margin-bottom: 20px;
+width: 100%;
+}
+.table-second{
+width: 100%;
+margin-bottom: 20px;
+}
+p{
+font-size: 18px;
+text-align: center;
+font-weight: 600;
+}
+.box-table{
+
+flex-direction: column;
+flex-wrap: wrap;
+max-width: 600px;
+margin: auto;
+}
+.table-third tr td{
+text-align: center;
+margin-bottom: 20px;
+}
+.table-third{
+margin:auto;
+margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="box-table">
+
+<p>Данные клиента</p>
+
+<table class="table-first">
+<tr>
+<td>Заказ от:</td>
+<td>{{name }}</td>
+</tr>
+<tr>
+<td>Город / Регион:</td>
+<td>{{ city }}</td>
+</tr>
+<tr>
+<td>Адрес доставки:</td>
+<td>{{ address }}</td>
+</tr>
+<tr>
+<td>Телефон:</td>
+<td>{{ phone_number }}</td>
+</tr>
+<tr>
+<td>Email:</td>
+<td>{{ email }}</td>
+</tr>
+</table>
+
+<p>Состав заказа</p>
+{%for item in items %}
+<table class="table-second">
+    <tr>
+    <td>Нзавание товара:</td>
+    <td>{{item.name}}</td>
+    </tr>
+    <tr>
+    <td>Объем в мл:</td>
+    <td>{{item.volume}} мл</td>
+    </tr>
+    <tr>
+    <td>Артикул:</td>
+    <td>{{item.vendor_code}}</td>
+    </tr>
+    <tr>
+    <td>Кол-во (шт):</td>
+    <td>{{item.count}} шт</td>
+    </tr>
+    <tr>
+    <td>Цена за штуку:</td>
+    <td>{{item.price}}₽</td>
+    </tr>
+    </table>
+
+{% endfor %}
+
+
+<p>Итоговая стоимость заказа</p>
+
+<table class="table-third">
+<tr>
+<td>{{total_price}}₽</td>
+</tr>
+</table>
+
+</div>
+
+</body>
+</html>
